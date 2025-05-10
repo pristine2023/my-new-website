@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login Page</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #eef1f5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      background-color: #fff;
+      padding: 40px 30px;
+      border-radius: 10px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 400px;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 25px;
+      color: #2c3e50;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #555;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+    }
+
+    input:focus {
+      border-color: #3498db;
+      outline: none;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: #3498db;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      background-color: #2980b9;
+    }
+
+    .link {
+      text-align: center;
+      margin-top: 15px;
+      font-size: 13px;
+      color: #3498db;
+      cursor: pointer;
+    }
+
+    .error-message {
+      color: red;
+      font-size: 14px;
+      margin-top: 10px;
+      text-align: center;
+    }
+
+    .success-message {
+      color: green;
+      font-size: 14px;
+      margin-top: 10px;
+      text-align: center;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container" id="authContainer">
+    <h2 id="formTitle">Login</h2>
+
+    <!-- Login Form -->
+    <form id="loginForm">
+      <div class="form-group">
+        <label for="loginUsername">Email</label>
+        <input type="email" id="loginUsername" required />
+      </div>
+      <div class="form-group">
+        <label for="loginPassword">Password</label>
+        <input type="password" id="loginPassword" required />
+      </div>
+      <button type="submit">Login</button>
+      <div class="error-message" id="loginError"></div>
+      <div class="link" onclick="showSignup()">Don't have an account? Sign up</div>
+      <div class="link" onclick="forgotPassword()">Forgot password?</div>
+    </form>
+
+    <!-- Signup Form -->
+    <form id="signupForm" class="hidden">
+      <div class="form-group">
+        <label for="signupFullName">Full Name</label>
+        <input type="text" id="signupFullName" required />
+      </div>
+      <div class="form-group">
+        <label for="signupEmail">Gmail</label>
+        <input type="email" id="signupEmail" required />
+      </div>
+      <div class="form-group">
+        <label for="signupPassword">Password</label>
+        <input type="password" id="signupPassword" required />
+      </div>
+      <button type="submit">Sign Up</button>
+      <div class="success-message" id="signupSuccess"></div>
+      <div class="error-message" id="signupError"></div>
+      <div class="link" onclick="showLogin()">Already have an account? Login</div>
+    </form>
+
+    <!-- Forgot Password Form -->
+    <form id="forgotPasswordForm" class="hidden">
+      <div class="form-group">
+        <label for="forgotEmail">Enter your Gmail</label>
+        <input type="email" id="forgotEmail" required />
+      </div>
+      <button type="submit">Recover Password</button>
+      <div class="success-message" id="forgotSuccess"></div>
+      <div class="error-message" id="forgotError"></div>
+      <div class="link" onclick="showLogin()">Back to login</div>
+    </form>
+
+  </div>
+
+  <script>
+    const loginForm = document.getElementById('loginForm');
+    const signupForm = document.getElementById('signupForm');
+    const forgotForm = document.getElementById('forgotPasswordForm');
+    const formTitle = document.getElementById('formTitle');
+
+    function showSignup() {
+      loginForm.classList.add('hidden');
+      signupForm.classList.remove('hidden');
+      forgotForm.classList.add('hidden');
+      formTitle.textContent = 'Sign Up';
+    }
+
+    function showLogin() {
+      signupForm.classList.add('hidden');
+      loginForm.classList.remove('hidden');
+      forgotForm.classList.add('hidden');
+      formTitle.textContent = 'Login';
+    }
+
+    function forgotPassword() {
+      loginForm.classList.add('hidden');
+      signupForm.classList.add('hidden');
+      forgotForm.classList.remove('hidden');
+      formTitle.textContent = 'Forgot Password';
+    }
+
+    // Login Form Handling
+    loginForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      const email = document.getElementById('loginUsername').value.trim();
+      const password = document.getElementById('loginPassword').value.trim();
+      const errorMsg = document.getElementById('loginError');
+
+      const users = JSON.parse(localStorage.getItem('users')) || [];
+
+      const found = users.find(user => user.email === email && user.password === password);
+
+      if (found) {
+        errorMsg.textContent = '';
+        window.location.href = 'dashboard.html'; // change if needed
+      } else {
+        errorMsg.textContent = 'Invalid email or password.';
+      }
+    });
+
+    // Signup Form Handling
+    signupForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      const fullName = document.getElementById('signupFullName').value.trim();
+      const email = document.getElementById('signupEmail').value.trim();
+      const password = document.getElementById('signupPassword').value.trim();
+      const errorMsg = document.getElementById('signupError');
+      const successMsg = document.getElementById('signupSuccess');
+
+      let users = JSON.parse(localStorage.getItem('users')) || [];
+
+      const exists = users.find(user => user.email === email);
+
+      if (exists) {
+        errorMsg.textContent = 'This email is already registered.';
+        successMsg.textContent = '';
+      } else {
+        users.push({ fullName, email, password });
+        localStorage.setItem('users', JSON.stringify(users));
+        errorMsg.textContent = '';
+        successMsg.textContent = 'Signup successful! You can now log in.';
+        document.getElementById('signupFullName').value = '';
+        document.getElementById('signupEmail').value = '';
+        document.getElementById('signupPassword').value = '';
+      }
+    });
+
+    // Forgot Password Handling
+    forgotForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      const email = document.getElementById('forgotEmail').value.trim();
+      const successMsg = document.getElementById('forgotSuccess');
+      const errorMsg = document.getElementById('forgotError');
+
+      const users = JSON.parse(localStorage.getItem('users')) || [];
+      const user = users.find(u => u.email === email);
+
+      if (user) {
+        successMsg.textContent = `Your password is: ${user.password}`;
+        errorMsg.textContent = '';
+      } else {
+        errorMsg.textContent = 'Email not found.';
+        successMsg.textContent = '';
+      }
+    });
+  </script>
+
+</body>
+</html>
+
+</body>
+</html>
